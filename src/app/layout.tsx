@@ -10,8 +10,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Modern Design Tool Landing Page",
-  description: "",
+  title: "Layers",
+  description: "Modern Design Tool Landing Page",
 };
 
 export default function RootLayout({
