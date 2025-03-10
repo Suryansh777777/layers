@@ -3,11 +3,11 @@
 import Image from "next/image";
 import logoImage from "@/assets/images/logo.svg";
 import Button from "@/components/Button";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AnimatePresence, motion } from "framer-motion";
 const navLinks = [
-  { label: "Home", href: "#" },
+  { label: "Home", href: "#home" },
   { label: "Features", href: "#features" },
   { label: "Integrations", href: "#integrations" },
   { label: "FAQs", href: "#faqs" },
@@ -15,7 +15,23 @@ const navLinks = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const handleClickNavItem = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setIsOpen(false);
 
+    const url = new URL(e.currentTarget.href);
+    const hash = url.hash;
+
+    // Add a small delay to let the menu animation complete
+    setTimeout(() => {
+      const target = document.querySelector(hash);
+      if (!target) {
+        console.log("Target not found:", hash);
+        return;
+      }
+      target.scrollIntoView({ behavior: "smooth" });
+    }, 300); // 300ms delay should be enough for the menu animation
+  };
   return (
     <>
       <section className="py-4 lg:py-8 fixed w-full top-0 z-50 ">
@@ -35,6 +51,7 @@ export default function Navbar() {
                     <a
                       key={link.label}
                       href={link.href}
+                      onClick={handleClickNavItem}
                       className="text-sm font-medium text-white hover:text-lime-400"
                     >
                       {link.label}
@@ -108,7 +125,11 @@ export default function Navbar() {
                 >
                   <div className="flex flex-col items-center gap-4 py-4 ">
                     {navLinks.map((link) => (
-                      <a key={link.label} href={link.href} className="">
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        onClick={handleClickNavItem}
+                      >
                         {link.label}
                       </a>
                     ))}
