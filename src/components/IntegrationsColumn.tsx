@@ -2,9 +2,8 @@
 import { type IntegrationsType } from "@/sections/Integrations";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
-import { motion } from "framer-motion";
-import { Fragment } from "react";
-import { reverse } from "dns";
+import { motion, useAnimationControls } from "framer-motion";
+import { Fragment, useEffect } from "react";
 
 export default function IntegrationsColumn(props: {
   integrations: IntegrationsType;
@@ -12,12 +11,33 @@ export default function IntegrationsColumn(props: {
   reverse?: boolean;
 }) {
   const { integrations, reverse, className } = props;
+  const controls = useAnimationControls();
+
+  useEffect(() => {
+    controls.start({
+      y: reverse ? 0 : "-50%",
+      transition: { duration: 15, repeat: Infinity, ease: "linear" },
+    });
+  }, [controls, reverse]);
+
+  const handleMouseEnter = () => {
+    controls.stop();
+  };
+
+  const handleMouseLeave = () => {
+    controls.start({
+      y: reverse ? 0 : "-50%",
+      transition: { duration: 15, repeat: Infinity, ease: "linear" },
+    });
+  };
+
   return (
     <motion.div
       className={twMerge("flex flex-col gap-4 pb-4", className)}
       initial={{ y: reverse ? "-50%" : 0 }}
-      animate={{ y: reverse ? 0 : "-50%" }}
-      transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+      animate={controls}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {Array.from({ length: 2 }).map((_, i) => (
         <Fragment key={i}>
